@@ -27,7 +27,7 @@ import { PreviewHandlerProvider, } from './preview-handler';
 import { PreviewUri } from './preview-uri';
 import { PreviewPreferences } from './preview-preferences';
 
-import debounce = require('lodash.debounce');
+import debounce = require('@theia/core/shared/lodash.debounce');
 
 export namespace PreviewCommands {
     /**

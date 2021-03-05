@@ -20,7 +20,7 @@ import { deepClone } from '@theia/core/lib/common/objects';
 import { Emitter } from '@theia/core';
 import { Deferred } from '@theia/core/lib/common/promise-util';
 import { Md5 } from 'ts-md5';
-import throttle = require('lodash.throttle');
+import throttle = require('@theia/core/shared/lodash.throttle');
 import { NotificationPreferences } from './notification-preferences';
 import { ContextKeyService, ContextKey } from '@theia/core/lib/browser/context-key-service';
 import { OpenerService } from '@theia/core/lib/browser';

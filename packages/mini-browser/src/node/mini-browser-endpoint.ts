@@ -15,7 +15,7 @@
  ********************************************************************************/
 
 const vhost = require('vhost');
-import express = require('express');
+import express = require('@theia/core/shared/express');
 import * as fs from '@theia/core/shared/fs-extra';
 import { lookup } from 'mime-types';
 import { injectable, inject, named } from '@theia/core/shared/inversify';

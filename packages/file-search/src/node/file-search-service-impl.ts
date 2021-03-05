@@ -15,7 +15,7 @@
  ********************************************************************************/
 
 import * as cp from 'child_process';
-import * as fuzzy from 'fuzzy';
+import * as fuzzy from '@theia/core/shared/fuzzy';
 import * as readline from 'readline';
 import { rgPath } from 'vscode-ripgrep';
 import { injectable, inject } from '@theia/core/shared/inversify';

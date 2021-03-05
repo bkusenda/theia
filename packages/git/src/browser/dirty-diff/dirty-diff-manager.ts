@@ -28,7 +28,7 @@ import { GitResourceResolver } from '../git-resource-resolver';
 import { WorkingDirectoryStatus, GitFileStatus, GitFileChange, Repository, Git, GitStatusChangeEvent } from '../../common';
 import { GitRepositoryTracker } from '../git-repository-tracker';
 
-import throttle = require('lodash.throttle');
+import throttle = require('@theia/core/shared/lodash.throttle');
 
 @injectable()
 export class DirtyDiffManager {

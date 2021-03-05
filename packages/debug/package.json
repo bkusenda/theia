@@ -3,7 +3,6 @@
   "version": "1.11.0",
   "description": "Theia - Debug Extension",
   "dependencies": {
-    "@theia/application-package": "1.11.0",
     "@theia/console": "1.11.0",
     "@theia/core": "1.11.0",
     "@theia/editor": "1.11.0",

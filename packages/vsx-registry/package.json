@@ -10,7 +10,6 @@
     "@types/sanitize-html": "^1.13.31",
     "@types/showdown": "^1.7.1",
     "bent": "^7.1.0",
-    "fs-extra": "^4.0.2",
     "p-debounce": "^2.1.0",
     "requestretry": "^3.1.0",
     "sanitize-html": "^1.14.1",

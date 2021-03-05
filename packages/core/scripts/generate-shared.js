@@ -17,7 +17,13 @@
 const path = require('path');
 const { promises: fsp } = require('fs');
 const { EOL } = require('os');
-const { dependencies, theiaReExports } = require('../package.json');
+const { exportStar, exportEqual, sharedModules } = require('../shared');
+
+const {
+    dependencies,
+    devDependencies,
+    peerDependencies,
+} = require('../package.json');
 
 const shared = path.resolve(__dirname, '../shared');
 
@@ -27,25 +33,12 @@ main().catch(error => {
 });
 
 async function main() {
-    /** @type {[string, string][]} */
-    const exportStar = theiaReExports['export *'].map(entry => {
-        const [package, alias = entry] = entry.split(':', 2);
-        return [package, alias];
-    });
-    /** @type {[string, string][]} */
-    const exportEqual = theiaReExports['export ='].map(entry => {
-        const [package, namespace = entry] = entry.split(' as ', 2);
-        return [package, namespace];
-    });
     await mkdirp(shared);
     await Promise.all([
         generateExportTheiaElectron(),
-        Promise.all(exportStar.map(([package, alias]) => generateExportStar(package, alias))),
-        Promise.all(exportEqual.map(([package, namespace]) => generateExportEqual(package, namespace))),
-        generateReadme([
-            ...exportStar.map(([package, alias]) => package),
-            ...exportEqual.map(([package, namespace]) => package),
-        ].sort()),
+        Promise.all(exportStar.map(entry => generateExportStar(entry.module, entry.alias))),
+        Promise.all(exportEqual.map(entry => generateExportEqual(entry.module, entry.namespace))),
+        generateReadme(sharedModules),
     ]);
 }
 
@@ -54,7 +47,7 @@ async function generateReadme(reExports) {
     const output = path.resolve(__dirname, '../README.md');
     const readme = await fsp.readFile(input, { encoding: 'utf8' });
     await fsp.writeFile(output, readme.replace('{{RE-EXPORTS}}', reExports.map(
-        package => ` - [\`${package}@${getPackageRange(package)}\`](${getNpmUrl(package)})`
+        module => ` - [\`${module}@${getPackageRange(module)}\`](${getNpmUrl(module)})`
     ).join(getEOL(readme))));
 }
 
@@ -71,37 +64,37 @@ export = Electron;
     ]);
 }
 
-async function generateExportStar(package, alias) {
-    const base = await prepareSharedPackage(alias);
+async function generateExportStar(module, alias) {
+    const base = await prepareSharedModule(alias);
     await Promise.all([
         writeFileIfMissing(`${base}.js`, `\
-module.exports = require('${package}');
+module.exports = require('${module}');
 `),
         writeFileIfMissing(`${base}.d.ts`, `\
-export * from '${package}';
+export * from '${module}';
 `),
     ]);
 }
 
-async function generateExportEqual(package, namespace) {
-    const base = await prepareSharedPackage(package);
+async function generateExportEqual(module, namespace) {
+    const base = await prepareSharedModule(module);
     await Promise.all([
         writeFileIfMissing(`${base}.js`, `\
-module.exports = require('${package}');
+module.exports = require('${module}');
 `),
         writeFileIfMissing(`${base}.d.ts`, `\
-import ${namespace} = require('${package}');
+import ${namespace} = require('${module}');
 export = ${namespace};
 `),
     ]);
 }
 
 /**
- * @param {string} package
+ * @param {string} module
  * @returns {string} target filename without extension (base)
  */
-async function prepareSharedPackage(package) {
-    const base = path.resolve(shared, package);
+async function prepareSharedModule(module) {
+    const base = path.resolve(shared, module);
     // Handle case like '@a/b/c/d.js' => mkdirp('@a/b/c')
     await mkdirp(path.dirname(base));
     return base;
@@ -156,17 +149,26 @@ function getNpmUrl(package) {
  * @returns {string}
  */
 function getPackageRange(package) {
-    return dependencies[getPackageName(package)];
+    const packageName = getPackageName(package);
+    if (packageName === 'electron') {
+        // In this case we are doing something weird, @theia/core does not depend on electron,
+        // but rather we depend on an optional peer dependency @theia/electron which itself depends
+        // on electron. For practical purposes, we re-export electron through @theia/electron own re-exports.
+        // The exports look like this: electron -> @theia/electron (optional) -> @theia/core/shared/electron
+        return require('@theia/electron/package.json').dependencies.electron;
+    }
+    return dependencies[packageName] || devDependencies[packageName] || peerDependencies[packageName];
 }
 
 /**
  * Only keep the first two parts of the package name
  * e.g. @a/b/c => @a/b
- * @param {string} package
+ * @param {string} module
  * @returns {string}
  */
-function getPackageName(package) {
-    return package.startsWith('@')
-        ? package.split('/').slice(0, 2).join('/')
-        : package;
+function getPackageName(module) {
+    const slice = module.startsWith('@') ? 2 : 1;
+    return module.split('/')
+        .slice(0, slice)
+        .join('/');
 }

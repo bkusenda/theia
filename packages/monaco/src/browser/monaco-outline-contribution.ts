@@ -28,7 +28,7 @@ import { OutlineSymbolInformationNode } from '@theia/outline-view/lib/browser/ou
 import URI from '@theia/core/lib/common/uri';
 import { MonacoEditor } from './monaco-editor';
 
-import debounce = require('lodash.debounce');
+import debounce = require('@theia/core/shared/lodash.debounce');
 
 @injectable()
 export class MonacoOutlineContribution implements FrontendApplicationContribution {

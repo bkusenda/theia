@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import throttle = require('lodash.throttle');
+import throttle = require('@theia/core/shared/lodash.throttle');
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { Resource, MaybePromise } from '@theia/core';
 import { Navigatable } from '@theia/core/lib/browser/navigatable';

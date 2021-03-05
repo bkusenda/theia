@@ -25,7 +25,7 @@ import {
     TREE_NODE_CONTENT_CLASS,
 } from '@theia/core/lib/browser';
 import { PreferenceConfigurations } from '@theia/core/lib/browser/preferences/preference-configurations';
-import React = require('react');
+import React = require('@theia/core/shared/react');
 import { PreferenceTreeModel, PreferenceTreeNodeRow, PreferenceTreeNodeProps } from '../preference-tree-model';
 
 @injectable()

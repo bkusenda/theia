@@ -24,7 +24,7 @@ import { MessageService } from '@theia/core/lib/common/message-service';
 import { Progress } from '@theia/core/lib/common/message-service-protocol';
 import { Endpoint } from '@theia/core/lib/browser/endpoint';
 
-import throttle = require('lodash.throttle');
+import throttle = require('@theia/core/shared/lodash.throttle');
 
 const maxChunkSize = 64 * 1024;
 
