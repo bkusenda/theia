@@ -416,7 +416,7 @@ etc.) by opening `packages/<package name>/coverage/index.html`.
  - Install [`scoop`](https://github.com/lukesampson/scoop#installation).
  - Install [`nvm`](https://github.com/coreybutler/nvm-windows) with scoop: `scoop install nvm`.
  - Install Node.js with `nvm`: `nvm install 12.14.1`, then use it: `nvm use 12.14.1`. You can list all available Node.js versions with `nvm list available` if you want to pick another version.
- - Install `yarn`: `scoop install yarn`.
+ - Install `yarn`: `scoop install yarn@1.7.0`.
  - Install [`windows-build-tools`](https://github.com/felixrieseberg/windows-build-tools). Run `PowerShell` as _Administrator_ and copy paste the following: `npm --add-python-to-path install --global --production windows-build-tools`
 
 Clone, build and run Theia.
